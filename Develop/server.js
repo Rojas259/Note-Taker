@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 
-const uuid = require("./Develop/Helpers/uuid.js");
+const uuid = require("./Helpers/uuid");
 
 
 
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
-app.get("/notes", (req, res) => res.sendFile(path.join(__dirname, "./Develop/public/notes.html")))
+app.get("/notes", (req, res) => res.sendFile(path.join(__dirname, "/public/notes.html")))
 app.get("/api/notes", (req, res) => {
     fs.readFile("./db/db.json", "utf8", (err, data) => {
         if (err) {
@@ -28,7 +28,7 @@ app.post("/api/notes", (req, res) => {
     console.info(`${req.method} request received to add a note`);
     const { title, text } = req.body;
     if (title && text) {
-        fs.readFile("./Develop/db/db.json", "utf8", (err, data) => {
+        fs.readFile("./db/db.json", "utf8", (err, data) => {
             if (err) {
                 console.error(err);
                 res.status(500).json('Error in posting note');
@@ -42,7 +42,7 @@ app.post("/api/notes", (req, res) => {
             };
             existingData.push(newNote);
             const updatedDataString = JSON.stringify(existingData);
-            fs.writeFile("./Develop/db/db.json",
+            fs.writeFile("./db/db.json",
                 updatedDataString, (writeErr) => {
                     if (writeErr) {
                         console.error(writeErr);
@@ -62,7 +62,7 @@ app.post("/api/notes", (req, res) => {
     }
 });
 app.get("*", (req, res) => 
-    res.sendFile(path.join(__dirname, "./Develop/public/index.html")))
+    res.sendFile(path.join(__dirname, "/public/index.html")))
 app.listen(PORT, () =>
     console.log(`Example app listening at http://localhost:${PORT}`)
 );
